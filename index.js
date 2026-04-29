@@ -34,6 +34,13 @@ async function run() {
       const result = await gardenCollection.find().toArray()
       res.send(result)
     })
+   //update information
+    app.get('/gardens/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id)}
+      const result=await gardenCollection.findOne(query)
+      res.send(result)
+    })
 
     app.post('/gardens', async (req, res) => {
 
@@ -41,6 +48,26 @@ async function run() {
       const result = await gardenCollection.insertOne(newtips)
       res.send(result)
 
+    })
+     //delete db
+    app.delete('/gardens/:id',async(req,res)=>{
+      const id=req.params.id;
+      const query={_id:new ObjectId(id)}
+      const result=await gardenCollection.deleteOne(query)
+      res.send(result)
+    })
+
+    //update db
+    app.put('/gardens/:id',async(req,res)=>{
+      const id=req.params.id;
+      const filter={_id:new ObjectId(id)}
+      const options={upsert:true}
+      const updatetips=req.body
+      const updateDoc={
+        $set:updatetips
+      }
+      const result=await gardenCollection.updateOne(filter,updateDoc,options)
+      res.send(result)
     })
 
     await client.db("admin").command({ ping: 1 });
