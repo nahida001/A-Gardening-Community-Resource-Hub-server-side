@@ -29,7 +29,9 @@ async function run() {
     await client.connect();
 
     const gardenCollection = client.db('GardeningDB').collection('gardens')
-
+    const user=client.db('GardeningDB').collection('user')
+    
+     //gardeningDatabase 
     app.get('/gardens', async (req, res) => {
       const result = await gardenCollection.find().toArray()
       res.send(result)
@@ -41,9 +43,8 @@ async function run() {
       const result=await gardenCollection.findOne(query)
       res.send(result)
     })
-
+   
     app.post('/gardens', async (req, res) => {
-
       const newtips = req.body;
       const result = await gardenCollection.insertOne(newtips)
       res.send(result)
@@ -69,6 +70,19 @@ async function run() {
       const result=await gardenCollection.updateOne(filter,updateDoc,options)
       res.send(result)
     })
+
+    //user DB
+    app.get('/user',async(req,res)=>{
+      const result=await user.find().toArray()
+      res.send(result)
+    })
+
+    app.post('/user',async(req,res)=>{
+      const newuser=req.body;
+      const result=await user.insertOne(newuser)
+      res.send(result)
+    })
+
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
