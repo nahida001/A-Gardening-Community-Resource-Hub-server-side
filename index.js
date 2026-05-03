@@ -82,6 +82,17 @@ async function run() {
       const result=await user.insertOne(newuser)
       res.send(result)
     })
+    app.patch('/user',async(req,res)=>{
+      const {email,lastSignInTime}=req.body;
+      const filter={email:email}
+      const updateDoc={
+        $set:{
+          lastSignInTime:lastSignInTime
+        }
+      }
+      const result=await user.updateOne(filter,updateDoc)
+      res.send(result)
+    })
 
 
     await client.db("admin").command({ ping: 1 });
